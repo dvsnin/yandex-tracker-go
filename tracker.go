@@ -17,11 +17,3 @@ type Client struct {
 	xOrgID string
 	url    string
 }
-
-type User struct {
-	Self    string
-	ID      string
-	Display string
-}
-
-type Users []User

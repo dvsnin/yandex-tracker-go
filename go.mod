@@ -1,3 +1,3 @@
-module awesomeProject2
+module tracker
 
 go 1.14
