@@ -1,9 +1,3 @@
-/proto
-/vendor
-/data
-/datax
-.env
-.env.docker
+/cmd
 .DS_store
 .idea
-profile*.*
