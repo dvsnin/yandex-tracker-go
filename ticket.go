@@ -27,18 +27,19 @@ func (t Ticket) Assignee() User {
 }
 
 func (t Ticket) Followers() Users {
-	var users Users
 	if followers, ok := t["followers"].([]interface{}); ok {
-		for _, user := range followers {
-			users = append(users, User{
-				Self:    toString(user.(map[string]interface{})["self"]),
-				ID:      toString(user.(map[string]interface{})["id"]),
-				Display: toString(user.(map[string]interface{})["display"]),
-			})
+		users := make(Users, len(followers))
+		for i := range followers {
+			users[i] = User{
+				Self:    toString(followers[i].(map[string]interface{})["self"]),
+				ID:      toString(followers[i].(map[string]interface{})["id"]),
+				Display: toString(followers[i].(map[string]interface{})["display"]),
+			}
 		}
+		return users
 	}
 
-	return users
+	return Users{}
 }
 
 func (t Ticket) Summary() string {
