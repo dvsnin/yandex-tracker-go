@@ -10,9 +10,6 @@ const (
 )
 
 type Tracker struct {
-	token   string
-	xOrgID  string
-	url     string
 	request *resty.Request
 }
 
@@ -23,9 +20,6 @@ func New(token string, xOrgID string) *Tracker {
 		"X-Org-Id":      xOrgID,
 	}
 	return &Tracker{
-		token:   token,
-		xOrgID:  xOrgID,
-		url:     TRACKER_URL,
 		request: resty.New().R().SetHeaders(headers),
 	}
 }
