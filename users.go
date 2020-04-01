@@ -1,5 +1,6 @@
 package tracker
 
+// Basic user structure in Yandex.Tracker
 type User struct {
 	Self    string
 	ID      string
@@ -8,6 +9,7 @@ type User struct {
 
 type Users []User
 
+// Get user id
 func (u *User) Id() string {
 	if u != nil {
 		return u.ID
@@ -16,6 +18,7 @@ func (u *User) Id() string {
 	return ""
 }
 
+// Get user name
 func (u *User) Name() string {
 	if u != nil {
 		return u.Display
