@@ -35,7 +35,7 @@ func main() {
 import (
     "fmt"
 
-    "github.com/slack-go/slack"
+    "github.com/dvasyanin/yandex-tracker-go"
 )
 
 func main() {
