@@ -6,7 +6,8 @@ import (
 )
 
 const (
-	TRACKER_URL = "https://api.tracker.yandex.net/v2/issues/"
+	ticketUrl      = "https://api.tracker.yandex.net/v2/issues/"
+	ticketComments = "/comments"
 )
 
 type Tracker struct {
@@ -26,7 +27,31 @@ func New(token string, xOrgID string) *Tracker {
 
 // Get Yandex.Tracker ticket by ticket key
 func (t *Tracker) GetTicket(ticketKey string) (ticket Ticket, err error) {
-	resp, err := t.request.Get(TRACKER_URL + ticketKey)
+	resp, err := t.request.Get(ticketUrl + ticketKey)
+	if resp != nil {
+		defer func() {
+			if err := resp.RawBody().Close(); err != nil {
+				return
+			}
+		}()
+	}
+	if err != nil {
+		return
+	}
+
+	err = json.Unmarshal(resp.Body(), &ticket)
+	if err != nil {
+		return
+	}
+
+	return
+}
+
+// Patch Yandex.Tracker ticket by ticket key
+func (t *Tracker) PatchTicket(ticketKey string, body map[string]string) (ticket Ticket, err error) {
+	resp, err := t.request.
+		SetBody(body).
+		Patch(ticketUrl + ticketKey)
 	if resp != nil {
 		defer func() {
 			if err := resp.RawBody().Close(); err != nil {
@@ -45,11 +70,9 @@ func (t *Tracker) GetTicket(ticketKey string) (ticket Ticket, err error) {
 	return
 }
 
-// Patch Yandex.Tracker ticket by ticket key
-func (t *Tracker) PatchTicket(ticketKey string, body map[string]string) (ticket Ticket, err error) {
-	resp, err := t.request.
-		SetBody(body).
-		Patch(TRACKER_URL + ticketKey)
+// Get Yandex.Tracker ticket comments by ticket key
+func (t *Tracker) GetTicketComments(ticketKey string) (comments TicketComments, err error) {
+	resp, err := t.request.Get(ticketUrl + ticketKey + ticketComments)
 	if resp != nil {
 		defer func() {
 			if err := resp.RawBody().Close(); err != nil {
@@ -61,9 +84,10 @@ func (t *Tracker) PatchTicket(ticketKey string, body map[string]string) (ticket 
 		return
 	}
 
-	err = json.Unmarshal(resp.Body(), &ticket)
+	err = json.Unmarshal(resp.Body(), &comments)
 	if err != nil {
 		return
 	}
+
 	return
 }
