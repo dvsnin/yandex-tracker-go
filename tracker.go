@@ -2,6 +2,7 @@ package tracker
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/go-resty/resty/v2"
 )
 
@@ -38,6 +39,8 @@ func (t *Tracker) GetTicket(ticketKey string) (ticket Ticket, err error) {
 	if err != nil {
 		return
 	}
+
+	fmt.Println(string(resp.Body()))
 
 	err = json.Unmarshal(resp.Body(), &ticket)
 	if err != nil {
