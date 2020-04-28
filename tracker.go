@@ -40,7 +40,9 @@ func (t *Tracker) GetTicket(ticketKey string) (ticket Ticket, err error) {
 		return
 	}
 
-	fmt.Println(string(resp.Body()))
+	if resp.StatusCode() != 200 {
+		return ticket, fmt.Errorf(string(resp.Body()))
+	}
 
 	err = json.Unmarshal(resp.Body(), &ticket)
 	if err != nil {
@@ -66,6 +68,10 @@ func (t *Tracker) PatchTicket(ticketKey string, body map[string]string) (ticket 
 		return
 	}
 
+	if resp.StatusCode() != 200 {
+		return ticket, fmt.Errorf(string(resp.Body()))
+	}
+
 	err = json.Unmarshal(resp.Body(), &ticket)
 	if err != nil {
 		return
@@ -85,6 +91,10 @@ func (t *Tracker) GetTicketComments(ticketKey string) (comments TicketComments, 
 	}
 	if err != nil {
 		return
+	}
+
+	if resp.StatusCode() != 200 {
+		return comments, fmt.Errorf(string(resp.Body()))
 	}
 
 	err = json.Unmarshal(resp.Body(), &comments)
