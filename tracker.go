@@ -12,23 +12,25 @@ const (
 )
 
 type Tracker struct {
-	request *resty.Request
+	headers map[string]string
+	client  *resty.Client
 }
 
 func New(token string, xOrgID string) *Tracker {
-	headers := map[string]string{
-		"Content-Type":  "application/json",
-		"Authorization": token,
-		"X-Org-Id":      xOrgID,
-	}
 	return &Tracker{
-		request: resty.New().R().SetHeaders(headers),
+		client: resty.New(),
+		headers: map[string]string{
+			"Content-Type":  "application/json",
+			"Authorization": token,
+			"X-Org-Id":      xOrgID,
+		},
 	}
 }
 
 // Get Yandex.Tracker ticket by ticket key
 func (t *Tracker) GetTicket(ticketKey string) (ticket Ticket, err error) {
-	resp, err := t.request.Get(ticketUrl + ticketKey)
+	request := t.client.R().SetHeaders(t.headers)
+	resp, err := request.Get(ticketUrl + ticketKey)
 	if err != nil {
 		return
 	}
@@ -48,7 +50,8 @@ func (t *Tracker) GetTicket(ticketKey string) (ticket Ticket, err error) {
 
 // Patch Yandex.Tracker ticket by ticket key
 func (t *Tracker) PatchTicket(ticketKey string, body map[string]string) (ticket Ticket, err error) {
-	resp, err := t.request.
+	request := t.client.R().SetHeaders(t.headers)
+	resp, err := request.
 		SetBody(body).
 		Patch(ticketUrl + ticketKey)
 	if err != nil {
@@ -69,7 +72,8 @@ func (t *Tracker) PatchTicket(ticketKey string, body map[string]string) (ticket 
 
 // Get Yandex.Tracker ticket comments by ticket key
 func (t *Tracker) GetTicketComments(ticketKey string) (comments TicketComments, err error) {
-	resp, err := t.request.Get(ticketUrl + ticketKey + ticketComments)
+	request := t.client.R().SetHeaders(t.headers)
+	resp, err := request.Get(ticketUrl + ticketKey + ticketComments)
 	if err != nil {
 		return
 	}
