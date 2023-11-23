@@ -3,6 +3,8 @@ package tracker
 import (
 	"encoding/json"
 	"fmt"
+	"net/http"
+
 	"github.com/go-resty/resty/v2"
 )
 
@@ -79,7 +81,7 @@ func (t *Tracker) GetTicketComments(ticketKey string) (comments TicketComments, 
 	}
 	defer resp.RawBody().Close()
 
-	if resp.StatusCode() != 200 {
+	if resp.StatusCode() != http.StatusOK {
 		return comments, fmt.Errorf(string(resp.Body()))
 	}
 

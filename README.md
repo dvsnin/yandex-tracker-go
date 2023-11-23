@@ -2,11 +2,10 @@ Yandex.Tracker API in Go
 ===============
 This is the original Yandex.Tracker library for Go.
 
-## Installing
+## Install
 
-### *go get*
-
-    $ go get -u github.com/dvasyanin/yandex-tracker-go
+###
+    go get -u github.com/dvasyanin/yandex-tracker-go
 
 ## Example
 
