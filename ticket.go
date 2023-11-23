@@ -2,6 +2,7 @@ package tracker
 
 type Ticket map[string]interface{}
 
+// CreatedBy
 // Get ticket author
 func (t Ticket) CreatedBy() User {
 	if createdBy, ok := t["createdBy"].(map[string]interface{}); ok {
@@ -15,6 +16,7 @@ func (t Ticket) CreatedBy() User {
 	return User{}
 }
 
+// Assignee
 // Get ticket assignee
 func (t Ticket) Assignee() User {
 	if assignee, ok := t["assignee"].(map[string]interface{}); ok {
@@ -28,6 +30,7 @@ func (t Ticket) Assignee() User {
 	return User{}
 }
 
+// Followers
 // Get ticket followers
 func (t Ticket) Followers() Users {
 	if followers, ok := t["followers"].([]interface{}); ok {
@@ -45,21 +48,25 @@ func (t Ticket) Followers() Users {
 	return Users{}
 }
 
+// Summary
 // Get ticket summary
 func (t Ticket) Summary() string {
 	return t.GetField("summary")
 }
 
+// Key
 // Get ticket key
 func (t Ticket) Key() string {
 	return t.GetField("key")
 }
 
+// Description
 // Get ticket description
 func (t Ticket) Description() string {
 	return t.GetField("description")
 }
 
+// Status
 // Get ticket status
 func (t Ticket) Status() string {
 	if status, ok := t["status"].(map[string]interface{}); ok {
@@ -70,11 +77,13 @@ func (t Ticket) Status() string {
 	return ""
 }
 
+// SlackMessageID
 // Get ticket custom field slack message id
 func (t Ticket) SlackMessageID() string {
 	return t.GetField("slackMessageID")
 }
 
+// GetField
 // Get any custom ticket field
 func (t Ticket) GetField(field string) string {
 	if key, ok := t[field]; ok {

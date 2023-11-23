@@ -29,6 +29,7 @@ func New(token string, xOrgID string) *Tracker {
 	}
 }
 
+// GetTicket
 // Get Yandex.Tracker ticket by ticket key
 func (t *Tracker) GetTicket(ticketKey string) (ticket Ticket, err error) {
 	request := t.client.R().SetHeaders(t.headers)
@@ -38,18 +39,18 @@ func (t *Tracker) GetTicket(ticketKey string) (ticket Ticket, err error) {
 	}
 	defer resp.RawBody().Close()
 
-	if resp.StatusCode() != 200 {
+	if resp.StatusCode() != http.StatusOK {
 		return ticket, fmt.Errorf(string(resp.Body()))
 	}
 
-	err = json.Unmarshal(resp.Body(), &ticket)
-	if err != nil {
+	if err := json.Unmarshal(resp.Body(), &ticket); err != nil {
 		return
 	}
 
 	return
 }
 
+// PatchTicket
 // Patch Yandex.Tracker ticket by ticket key
 func (t *Tracker) PatchTicket(ticketKey string, body map[string]string) (ticket Ticket, err error) {
 	request := t.client.R().SetHeaders(t.headers)
@@ -61,17 +62,17 @@ func (t *Tracker) PatchTicket(ticketKey string, body map[string]string) (ticket 
 	}
 	defer resp.RawBody().Close()
 
-	if resp.StatusCode() != 200 {
+	if resp.StatusCode() != http.StatusOK {
 		return ticket, fmt.Errorf(string(resp.Body()))
 	}
 
-	err = json.Unmarshal(resp.Body(), &ticket)
-	if err != nil {
+	if err := json.Unmarshal(resp.Body(), &ticket); err != nil {
 		return
 	}
 	return
 }
 
+// GetTicketComments
 // Get Yandex.Tracker ticket comments by ticket key
 func (t *Tracker) GetTicketComments(ticketKey string) (comments TicketComments, err error) {
 	request := t.client.R().SetHeaders(t.headers)
@@ -85,8 +86,7 @@ func (t *Tracker) GetTicketComments(ticketKey string) (comments TicketComments, 
 		return comments, fmt.Errorf(string(resp.Body()))
 	}
 
-	err = json.Unmarshal(resp.Body(), &comments)
-	if err != nil {
+	if err := json.Unmarshal(resp.Body(), &comments); err != nil {
 		return
 	}
 

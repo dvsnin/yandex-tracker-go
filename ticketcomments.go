@@ -3,6 +3,7 @@ package tracker
 type TicketComments []TicketComment
 type TicketComment map[string]interface{}
 
+// GetLast
 // Return last comment
 func (t TicketComments) GetLast() TicketComment {
 	countComments := len(t)
@@ -13,6 +14,7 @@ func (t TicketComments) GetLast() TicketComment {
 	return t[len(t)-1]
 }
 
+// CreatedBy
 // Get comment author
 func (t TicketComment) CreatedBy() User {
 	if createdBy, ok := t["createdBy"].(map[string]interface{}); ok {
@@ -26,11 +28,13 @@ func (t TicketComment) CreatedBy() User {
 	return User{}
 }
 
+// Text
 // Get comment text
 func (t TicketComment) Text() string {
 	return t.GetField("text")
 }
 
+// Summonees
 // Get comment author
 func (t TicketComment) Summonees() Users {
 	if summonees, ok := t["summonees"].([]interface{}); ok {
@@ -48,6 +52,7 @@ func (t TicketComment) Summonees() Users {
 	return Users{}
 }
 
+// GetField
 // Get any custom ticket field
 func (t TicketComment) GetField(field string) string {
 	if key, ok := t[field]; ok {
