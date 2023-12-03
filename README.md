@@ -23,6 +23,7 @@ func main() {
     ticket, err := client.GetTicket("TICKET KEY")
     if err != nil {
     	fmt.Printf("%v\n", err)
+        return
     }
     fmt.Printf("%s\n", ticket.Description())
 }
@@ -42,6 +43,7 @@ func main() {
     ticket, err := client.PatchTicket("TICKET KEY", map[string]string{"TICKET FIELD": "NEW VALUE"})
     if err != nil {
     	fmt.Printf("%v\n", err)
+        return
     }
     fmt.Printf("%s\n", ticket.Description())
 }
