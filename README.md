@@ -56,4 +56,4 @@ make a Pull Request, or create an Issue if you see any problem.
 
 ## License
 
-Licensed under [MIT License](https://github.com/dvasyanin/yandex-tracker-go/blob/master/LICENSE)
+This project is licensed under the MIT License - see the [LICENSE.md](https://github.com/dvasyanin/yandex-tracker-go/blob/master/LICENSE) file for details
