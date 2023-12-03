@@ -53,7 +53,3 @@ func main() {
 
 You are more than welcome to contribute to this project.  Fork and
 make a Pull Request, or create an Issue if you see any problem.
-
-## License
-
-BSD 2 Clause license
