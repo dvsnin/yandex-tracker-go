@@ -19,8 +19,8 @@ import (
 )
 
 func main() {
-	client := tracker.New("YOUR YANDEX.TRACKER TOKEN", "YOUR YANDEX ORG_ID")
-	ticket, err := client.GetTicket("TICKET KEY")
+    client := tracker.New("YOUR YANDEX.TRACKER TOKEN", "YOUR YANDEX ORG_ID")
+    ticket, err := client.GetTicket("TICKET KEY")
     if err != nil {
     	fmt.Printf("%v\n", err)
     }
