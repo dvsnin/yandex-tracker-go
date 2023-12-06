@@ -13,9 +13,9 @@ This is the original Yandex.Tracker library for Go.
 
 ```golang
 import (
-	"fmt"
+    "fmt"
 	
-	"github.com/dvsnin/yandex-tracker-go"
+    "github.com/dvsnin/yandex-tracker-go"
 )
 
 func main() {
@@ -33,7 +33,7 @@ func main() {
 
 ```golang
 import (
-	"fmt"
+    "fmt"
 
     "github.com/dvsnin/yandex-tracker-go"
 )
