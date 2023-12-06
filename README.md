@@ -5,7 +5,7 @@ This is the original Yandex.Tracker library for Go.
 ## Install
 
 ###
-    go get -u github.com/dvasyanin/yandex-tracker-go
+    go get -u github.com/dvsnin/yandex-tracker-go
 
 ## Example
 
@@ -14,8 +14,8 @@ This is the original Yandex.Tracker library for Go.
 ```golang
 import (
 	"fmt"
-
-	"github.com/dvasyanin/yandex-tracker-go"
+	
+	"github.com/dvsnin/yandex-tracker-go"
 )
 
 func main() {
@@ -33,9 +33,9 @@ func main() {
 
 ```golang
 import (
-    "fmt"
+	"fmt"
 
-    "github.com/dvasyanin/yandex-tracker-go"
+    "github.com/dvsnin/yandex-tracker-go"
 )
 
 func main() {
@@ -56,4 +56,4 @@ make a Pull Request, or create an Issue if you see any problem.
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](https://github.com/dvasyanin/yandex-tracker-go/blob/master/LICENSE) file for details
+This project is licensed under the MIT License - see the [LICENSE.md](https://github.com/dvsnin/yandex-tracker-go/blob/master/LICENSE) file for details
