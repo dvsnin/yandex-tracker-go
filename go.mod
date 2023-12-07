@@ -1,4 +1,4 @@
-module github.com/dvasyanin/yandex-tracker-go
+module github.com/dvsnin/yandex-tracker-go
 
 go 1.21
 
