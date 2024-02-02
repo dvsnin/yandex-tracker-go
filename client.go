@@ -13,27 +13,42 @@ var (
 )
 
 const (
+	baseUrl        = "https://api.tracker.yandex.net"
 	ticketUrl      = "https://api.tracker.yandex.net/v2/issues/"
 	ticketComments = "/comments"
 )
 
 type Client interface {
-	// GetTicket - get Yandex.Tracker ticket by ticket key
+	// GetTicket - get Yandex.Tracker ticket by ticket keys
 	GetTicket(ticketKey string) (ticket Ticket, err error)
 	// PatchTicket - patch Yandex.Tracker ticket by ticket key
 	PatchTicket(ticketKey string, body map[string]string) (ticket Ticket, err error)
 	// GetTicketComments - get Yandex.Tracker ticket comments by ticket key
 	GetTicketComments(ticketKey string) (comments TicketComments, err error)
+	// Myself - get information about the current Yandex.Tracker user
+	Myself() (user *User, err error)
+	// CreateIssue - create Yandex.Tracker issue
+	CreateIssue(opts *CreateIssueOptions) (issue *Issue, err error)
+	// FindIssues - search Yandex.Tracker issues
+	FindIssues(opts *FindIssuesOptions, listOpts *ListOptions) (issues []*Issue, err error)
 }
 
-func New(token, xOrgID string) Client {
+func New(token, xOrgID, xCloudOrgID string) Client {
+	headers := map[string]string{
+		"Content-Type":  "application/json",
+		"Authorization": token,
+	}
+
+	switch {
+	case xCloudOrgID != "":
+		headers["X-Cloud-Org-ID"] = xCloudOrgID
+	default:
+		headers["X-Org-Id"] = xOrgID
+	}
+
 	return &trackerClient{
-		client: resty.New(),
-		headers: map[string]string{
-			"Content-Type":  "application/json",
-			"Authorization": token,
-			"X-Org-Id":      xOrgID,
-		},
+		client:  resty.New(),
+		headers: headers,
 	}
 }
 

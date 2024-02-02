@@ -16,16 +16,16 @@ func (t TicketComments) GetLast() TicketComment {
 
 // CreatedBy
 // Get comment author
-func (t TicketComment) CreatedBy() User {
+func (t TicketComment) CreatedBy() BasicUser {
 	if createdBy, ok := t["createdBy"].(map[string]interface{}); ok {
-		return User{
+		return BasicUser{
 			Self:    toString(createdBy["self"]),
 			ID:      toString(createdBy["id"]),
 			Display: toString(createdBy["display"]),
 		}
 	}
 
-	return User{}
+	return BasicUser{}
 }
 
 // Text
@@ -36,11 +36,11 @@ func (t TicketComment) Text() string {
 
 // Summonees
 // Get comment author
-func (t TicketComment) Summonees() Users {
+func (t TicketComment) Summonees() BasicUsers {
 	if summonees, ok := t["summonees"].([]interface{}); ok {
-		users := make(Users, len(summonees))
+		users := make(BasicUsers, len(summonees))
 		for i := range summonees {
-			users[i] = User{
+			users[i] = BasicUser{
 				Self:    toString(summonees[i].(map[string]interface{})["self"]),
 				ID:      toString(summonees[i].(map[string]interface{})["id"]),
 				Display: toString(summonees[i].(map[string]interface{})["display"]),
@@ -49,7 +49,7 @@ func (t TicketComment) Summonees() Users {
 		return users
 	}
 
-	return Users{}
+	return BasicUsers{}
 }
 
 // GetField
