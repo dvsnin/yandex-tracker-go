@@ -4,39 +4,39 @@ type Ticket map[string]interface{}
 
 // CreatedBy
 // Get ticket author
-func (t Ticket) CreatedBy() User {
+func (t Ticket) CreatedBy() BasicUser {
 	if createdBy, ok := t["createdBy"].(map[string]interface{}); ok {
-		return User{
+		return BasicUser{
 			Self:    toString(createdBy["self"]),
 			ID:      toString(createdBy["id"]),
 			Display: toString(createdBy["display"]),
 		}
 	}
 
-	return User{}
+	return BasicUser{}
 }
 
 // Assignee
 // Get ticket assignee
-func (t Ticket) Assignee() User {
+func (t Ticket) Assignee() BasicUser {
 	if assignee, ok := t["assignee"].(map[string]interface{}); ok {
-		return User{
+		return BasicUser{
 			Self:    toString(assignee["self"]),
 			ID:      toString(assignee["id"]),
 			Display: toString(assignee["display"]),
 		}
 	}
 
-	return User{}
+	return BasicUser{}
 }
 
 // Followers
 // Get ticket followers
-func (t Ticket) Followers() Users {
+func (t Ticket) Followers() BasicUsers {
 	if followers, ok := t["followers"].([]interface{}); ok {
-		users := make(Users, len(followers))
+		users := make(BasicUsers, len(followers))
 		for i := range followers {
-			users[i] = User{
+			users[i] = BasicUser{
 				Self:    toString(followers[i].(map[string]interface{})["self"]),
 				ID:      toString(followers[i].(map[string]interface{})["id"]),
 				Display: toString(followers[i].(map[string]interface{})["display"]),
@@ -45,7 +45,7 @@ func (t Ticket) Followers() Users {
 		return users
 	}
 
-	return Users{}
+	return BasicUsers{}
 }
 
 // Summary
