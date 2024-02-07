@@ -185,11 +185,13 @@ func (t *trackerClient) CreateIssue(opts *CreateIssueOptions) (*Issue, *resty.Re
 func (t *trackerClient) FindIssues(opts *FindIssuesOptions, listOpts *ListOptions) ([]*Issue, *resty.Response, error) {
 	req := t.NewRequest(resty.MethodPost, "/v2/issues/_search", opts)
 	// TODO:
-	if listOpts.Expand != "" {
-		req.SetQueryParam("expand", listOpts.Expand)
-	}
-	if listOpts.PerPage > 0 {
-		req.SetQueryParam("perPage", fmt.Sprint(listOpts.PerPage))
+	if listOpts != nil {
+		if listOpts.Expand != "" {
+			req.SetQueryParam("expand", listOpts.Expand)
+		}
+		if listOpts.PerPage > 0 {
+			req.SetQueryParam("perPage", fmt.Sprint(listOpts.PerPage))
+		}
 	}
 	var result []*Issue
 	resp, err := t.Do(req, &result)
