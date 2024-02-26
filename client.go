@@ -31,6 +31,8 @@ type Client interface {
 	CreateIssue(opts *CreateIssueOptions) (issue *Issue, response *resty.Response, err error)
 	// FindIssues - search Yandex.Tracker issues
 	FindIssues(opts *FindIssuesOptions, listOpts *ListOptions) (issues []*Issue, response *resty.Response, err error)
+	// GetIssue - get Yandex.Tracker issue by key
+	GetIssue(issueKey string) (*Issue, *resty.Response, error)
 
 	WithLogger(l resty.Logger)
 	WithDebug(d bool)

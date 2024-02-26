@@ -11,9 +11,9 @@ type BasicUsers []BasicUser
 // User
 // Basic user structure in Yandex.Tracker
 type BasicUser struct {
-	Self    string
-	ID      string
-	Display string
+	Self    string `json:"self"`
+	ID      string `json:"id"`
+	Display string `json:"display"`
 }
 
 // Id
