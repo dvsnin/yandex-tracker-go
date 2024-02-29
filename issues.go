@@ -1,9 +1,9 @@
 package tracker
 
 import (
-	"encoding/json"
 	"fmt"
-	"net/http"
+
+	"github.com/go-resty/resty/v2"
 )
 
 // Basic Issue structure in Yandex.Tracker
@@ -172,52 +172,43 @@ type FindIssuesOptions struct {
 	Query *string `json:"query,omitempty"`
 }
 
-func (t *trackerClient) CreateIssue(opts *CreateIssueOptions) (*Issue, error) {
-	request := t.client.R().SetHeaders(t.headers)
-	resp, err := request.Post(baseUrl + "/v2/issues/")
-	if err != nil {
-		return nil, fmt.Errorf("request: %w", err)
-	}
-
-	if resp.StatusCode() != http.StatusOK {
-		return nil, fmt.Errorf("wrong status code: %d, message=%s, headers=%s", resp.StatusCode(), string(resp.Body()), t.headers)
-	}
-
+func (t *trackerClient) CreateIssue(opts *CreateIssueOptions) (*Issue, *resty.Response, error) {
+	req := t.NewRequest(resty.MethodPost, "/v2/issues/", opts)
 	result := new(Issue)
-	if err := json.Unmarshal(resp.Body(), result); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal: %w", err)
+	resp, err := t.Do(req, result)
+	if err != nil {
+		return nil, nil, fmt.Errorf("request: %w", err)
 	}
-
-	return result, nil
+	return result, resp, nil
 }
 
-func (t *trackerClient) FindIssues(opts *FindIssuesOptions, listOpts *ListOptions) ([]*Issue, error) {
-	request := t.client.R().SetHeaders(t.headers)
-	u := baseUrl + "/v2/issues/_search"
-	switch l := listOpts; {
-	case l == nil:
-		break
-	case l.Expand != "" && l.PerPage > 0:
-		u += fmt.Sprintf("?expand=%s&perPage=%d", l.Expand, l.PerPage)
-	case l.Expand != "":
-		u += "?expand=" + l.Expand
-	case l.PerPage > 0:
-		u += fmt.Sprintf("?perPage=%d", l.PerPage)
+func (t *trackerClient) FindIssues(opts *FindIssuesOptions, listOpts *ListOptions) ([]*Issue, *resty.Response, error) {
+	req := t.NewRequest(resty.MethodPost, "/v2/issues/_search", opts)
+	// TODO:
+	if listOpts != nil {
+		if listOpts.Expand != "" {
+			req.SetQueryParam("expand", listOpts.Expand)
+		}
+		if listOpts.PerPage > 0 {
+			req.SetQueryParam("perPage", fmt.Sprint(listOpts.PerPage))
+		}
 	}
-	request.SetBody(opts)
-	resp, err := request.Post(u)
-	if err != nil {
-		return nil, fmt.Errorf("request: %w", err)
-	}
-
-	if resp.StatusCode() != http.StatusOK {
-		return nil, fmt.Errorf("wrong status code: %d, message=%s, headers=%s", resp.StatusCode(), string(resp.Body()), t.headers)
-	}
-
 	var result []*Issue
-	if err := json.Unmarshal(resp.Body(), &result); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal: %w", err)
+	resp, err := t.Do(req, &result)
+	if err != nil {
+		return nil, nil, fmt.Errorf("request: %w", err)
 	}
 
-	return result, nil
+	return result, resp, nil
+}
+
+func (t *trackerClient) GetIssue(issueKey string) (*Issue, *resty.Response, error) {
+	req := t.NewRequest(resty.MethodGet, "/v2/issues/"+issueKey, nil)
+	result := new(Issue)
+	resp, err := t.Do(req, result)
+	if err != nil {
+		return nil, nil, fmt.Errorf("request: %w", err)
+	}
+
+	return result, resp, err
 }

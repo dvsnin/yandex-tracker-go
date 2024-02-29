@@ -28,9 +28,14 @@ type Client interface {
 	// Myself - get information about the current Yandex.Tracker user
 	Myself() (user *User, err error)
 	// CreateIssue - create Yandex.Tracker issue
-	CreateIssue(opts *CreateIssueOptions) (issue *Issue, err error)
+	CreateIssue(opts *CreateIssueOptions) (issue *Issue, response *resty.Response, err error)
 	// FindIssues - search Yandex.Tracker issues
-	FindIssues(opts *FindIssuesOptions, listOpts *ListOptions) (issues []*Issue, err error)
+	FindIssues(opts *FindIssuesOptions, listOpts *ListOptions) (issues []*Issue, response *resty.Response, err error)
+	// GetIssue - get Yandex.Tracker issue by key
+	GetIssue(issueKey string) (*Issue, *resty.Response, error)
+
+	WithLogger(l resty.Logger)
+	WithDebug(d bool)
 }
 
 func New(token, xOrgID, xCloudOrgID string) Client {
@@ -55,6 +60,38 @@ func New(token, xOrgID, xCloudOrgID string) Client {
 type trackerClient struct {
 	headers map[string]string
 	client  *resty.Client
+}
+
+func (t *trackerClient) WithLogger(l resty.Logger) {
+	t.client.SetLogger(l)
+}
+
+func (t *trackerClient) WithDebug(d bool) {
+	t.client.SetDebug(d)
+}
+
+func (t *trackerClient) NewRequest(method, path string, opt interface{}) *resty.Request {
+	req := t.client.R()
+	req.Method = method
+	req.URL = baseUrl + path
+	if opt != nil {
+		req.SetBody(opt)
+	}
+	return req.SetHeaders(t.headers)
+}
+
+func (t *trackerClient) Do(req *resty.Request, v interface{}) (*resty.Response, error) {
+	resp, err := req.Send()
+	if err != nil {
+		return nil, fmt.Errorf("request: %w", err)
+	}
+	if resp.IsError() {
+		return nil, fmt.Errorf("wrong status code: %d, message=%s, headers=%s", resp.StatusCode(), string(resp.Body()), t.headers)
+	}
+	if err := json.Unmarshal(resp.Body(), v); err != nil {
+		return nil, fmt.Errorf("json.Unmarshal: %w", err)
+	}
+	return resp, nil
 }
 
 func (t *trackerClient) GetTicket(ticketKey string) (Ticket, error) {
